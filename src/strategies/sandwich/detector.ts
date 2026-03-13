@@ -7,13 +7,12 @@
 
 import type { IOpportunityDetector, MevOpportunity } from '../../scanner/opportunityScanner';
 import type { DexId } from '../../data/poolMetadata';
-import { DEX_METADATA, USDC_TYPE, SEI_TYPE } from '../../data/poolMetadata';
+import { USDC_TYPE, SEI_TYPE } from '../../data/poolMetadata';
 import {
   uniform,
   uniformInt,
   pickOne,
   randomSuiAddress,
-  randomIntervalMs,
 } from '../../utils/random';
 
 /** Runtime context passed to detector */
