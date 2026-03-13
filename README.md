@@ -18,7 +18,7 @@
 
 ## Overview
 
-Intelligent search and execution framework for MEV (Maximal Extractable Value) opportunities on the Sui blockchain. Supports sandwich and backrun strategies across leading Sui DEXs and protocols.
+Intelligent search and execution framework for MEV (Maximal Extractable Value) opportunities on the Sui blockchain Supports sandwich and backrun strategies across leading Sui DEXs and protocols.
 
 ## Features
 
@@ -165,6 +165,10 @@ The bot is organized into:
 - **strategies/** — Sandwich detector, profit estimator
 - **stats/** — Metrics aggregation, display formatting
 - **ui/** — Console output with chalk
+
+## Contributing
+
+Pull requests and issues are welcome. Please open an issue to discuss ideas before submitting a PR.
 
 ## License
 
