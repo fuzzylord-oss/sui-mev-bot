@@ -27,6 +27,9 @@ export interface SwapParams {
   readonly recipient?: string;
 }
 
+/** Supported pool types for adapter matching */
+export type PoolTypeStr = 'amm' | 'clmm' | 'orderbook';
+
 /** DEX adapter interface */
 export interface IDexAdapter {
   readonly dexId: DexId;
