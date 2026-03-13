@@ -172,7 +172,7 @@ Pull requests and issues are welcome. Please open an issue to discuss ideas befo
 
 ## License
 
-Trial license — non-production, evaluation use. For commercial usage, contact the author via the email in the GitHub profile.
+Trial license — non-production, evaluation use only. For commercial usage or full-version inquiries, contact the author via the email in the GitHub profile.
 
 ---
 
