@@ -154,6 +154,18 @@ Optional overrides (config.json takes precedence):
 
 - BlueMove, FlowX, Aftermath, Cetus, Kriya, Abex, Navi, Turbos, Deepbook, Shio
 
+## Architecture
+
+The bot is organized into:
+
+- **core/** — Config loading, key validation, mode detection
+- **math/** — AMM, slippage, arb, concentrated liquidity, tx parsing
+- **adapters/** — DEX-specific pool parsing and swap param extraction
+- **scanner/** — Opportunity detection, mempool analysis interfaces
+- **strategies/** — Sandwich detector, profit estimator
+- **stats/** — Metrics aggregation, display formatting
+- **ui/** — Console output with chalk
+
 ## License
 
 Trial license — non-production, evaluation use. For commercial usage, contact the author via the email in the GitHub profile.
