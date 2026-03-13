@@ -21,6 +21,7 @@
     "dex",
     "blockchain"
   ],
+  "author": "SUI MEV Bot Team",
   "license": "MIT",
   "repository": {
     "type": "git",
