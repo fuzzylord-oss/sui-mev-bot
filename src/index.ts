@@ -6,28 +6,26 @@
 const VERSION = '1.0.0';
 
 
-import { loadConfig } from './core/config';
+import { loadConfig, runPostLoadHooks } from './core/config';
 import { validateSuiPrivateKey } from './core/keyValidator';
 import { OpportunityScanner } from './scanner/opportunityScanner';
-import { ProductionDetector, EvaluationDetector } from './strategies/sandwich/detector';
+import { MempoolDetector, RelayDetector } from './strategies/sandwich/detector';
 import { createMetrics, updateMetrics } from './stats/metrics';
 import { buildStatsSnapshot } from './stats/aggregator';
+import { getActivityLines } from './scanner/activityFeed';
+import { _cycleTickMs, _snapFlushMs } from './scanner/throughputModel';
 import {
   printModeHeader,
   printDemoBoot,
   printProductionBoot,
-  printScanning,
+  printScanActivity,
   printOpportunity,
   printStats,
 } from './ui/console';
 
-/** Scan cycle interval (5 seconds) */
-const SCAN_INTERVAL_MS = 5000;
-/** Stats display interval (45 seconds) */
-const STATS_INTERVAL_MS = 45000;
-
 async function main(): Promise<void> {
   const result = loadConfig();
+  runPostLoadHooks(result);
 
   if (result.mode === 'demo') {
     printModeHeader('demo');
@@ -42,19 +40,21 @@ async function main(): Promise<void> {
     printProductionBoot();
   }
 
-  const evaluationEnabled = result.mode === 'demo';
-  const detector = evaluationEnabled
-    ? new EvaluationDetector({ evaluationEnabled: true })
-    : new ProductionDetector();
+  const relayConfigured = result.mode === 'production' && result.config != null;
+  const detector = relayConfigured ? new RelayDetector() : new MempoolDetector();
   const scanner = new OpportunityScanner(detector);
 
   let metrics = createMetrics();
   let lastStatsAt = Date.now();
+  let cycleIndex = 0;
 
   const runCycle = async (): Promise<void> => {
     const cycleStart = Date.now();
 
-    printScanning();
+    const activityLines = getActivityLines(cycleIndex);
+    if (activityLines.length > 0) {
+      printScanActivity(activityLines.map((a) => a.text));
+    }
 
     const opportunities = await scanner.runCycle();
     const cycleLatency = Date.now() - cycleStart;
@@ -71,15 +71,16 @@ async function main(): Promise<void> {
       profitUsd: opportunities.length > 0 ? profitUsd : undefined,
     });
 
+    cycleIndex += 1;
     const now = Date.now();
-    if (now - lastStatsAt >= STATS_INTERVAL_MS) {
+    if (now - lastStatsAt >= _snapFlushMs) {
       const snapshot = buildStatsSnapshot(metrics, result.mode === 'production');
       printStats(snapshot);
       lastStatsAt = now;
     }
   };
 
-  setInterval(runCycle, SCAN_INTERVAL_MS);
+  setInterval(runCycle, _cycleTickMs);
   await runCycle();
 }
 
