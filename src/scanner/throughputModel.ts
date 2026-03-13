@@ -7,7 +7,7 @@
 import { ALL_DEX_IDS } from '../data/poolMetadata';
 import type { DexId } from '../data/poolMetadata';
 
-/** Cycle tick period for main loop (ms) */
+/** Cycle tick period for main loop (ms). Aligned with typical block cadence. */
 export const _cycleTickMs = 5_000;
 /** Snapshot flush period for aggregated metrics (ms) */
 export const _snapFlushMs = 45_000;
