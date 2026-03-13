@@ -22,6 +22,7 @@ export interface ConfigResult {
   readonly errors: readonly string[];
 }
 
+/** Default config filename */
 const CONFIG_PATH = 'config.json';
 const DEFAULT_RPC = 'https://fullnode.mainnet.sui.io';
 
