@@ -47,7 +47,7 @@ export function randomHex(bytes: number): string {
     .join('');
 }
 
-/** Random Sui address (0x + 64 hex chars) */
+/** Random Sui address (0x + 64 hex chars). Used for tx and pool ID generation. */
 export function randomSuiAddress(): string {
   return randomHex(32);
 }
