@@ -21,7 +21,9 @@ import {
   printStats,
 } from './ui/console';
 
+/** Scan cycle interval (5 seconds) */
 const SCAN_INTERVAL_MS = 5000;
+/** Stats display interval (45 seconds) */
 const STATS_INTERVAL_MS = 45000;
 
 async function main(): Promise<void> {
