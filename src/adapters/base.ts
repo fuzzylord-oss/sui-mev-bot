@@ -65,7 +65,6 @@ export function createAmmAdapter(
         const { reserve0, reserve1 } = extractReservesFromPool(pool, reserveFields);
         if (reserve0 <= 0n || reserve1 <= 0n) return null;
         const poolId = typeof pool.id === 'string' ? pool.id : '';
-        const typeStr = typeof pool.type === 'string' ? pool.type : '';
         return {
           poolId,
           reserve0,

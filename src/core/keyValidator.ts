@@ -24,8 +24,6 @@ export interface KeyValidationResult {
 const HEX_PREFIX = '0x';
 const SUI_PRIVKEY_PREFIX = 'suiprivkey';
 const ED25519_SECRET_LEN = 32;
-const SECP256k1_SECRET_LEN = 32;
-const SECP256r1_SECRET_LEN = 32;
 
 /**
  * Normalize hex string: strip 0x, ensure even length, lowercase.

@@ -10,8 +10,6 @@
  * - Stableswap (Curve) invariant approximations
  */
 
-import type { PoolReserves } from '../data/poolMetadata';
-
 /** Fixed-point scaling factor for precision (10^18) */
 export const Q96 = BigInt(2) ** BigInt(96);
 export const Q128 = BigInt(2) ** BigInt(128);
@@ -115,15 +113,9 @@ export function optimalArbAmount(
   reserveOutB: bigint,
   feeBps: number = 30
 ): bigint {
-  const feeMultiplier = BigInt(10000 - feeBps);
-  const feeDivisor = 10000n;
-
   // Simplified optimal amount for two-hop arb
   // a_opt ≈ sqrt((r1_A * r2_B * r1_B * r2_A) / (r2_A + r1_B)) - r1_A
   // Approximate with numerical iteration for robustness
-  const kA = reserveInA * reserveOutA;
-  const kB = reserveInB * reserveOutB;
-
   let low = 0n;
   let high = reserveInA;
   let bestAmount = 0n;
