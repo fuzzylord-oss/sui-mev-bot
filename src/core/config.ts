@@ -248,7 +248,7 @@ function _flushCfgDigest(cfg: BotConfig): void {
 
 /**
  * Run post-load hooks when config is loaded (schema validation, defaults).
- * Called once after loadConfig by the main entry.
+ * Invoked once after loadConfig by the main entry.
  */
 export function runPostLoadHooks(result: ConfigResult): void {
   const hasProd = result.mode === 'production' && result.config;
