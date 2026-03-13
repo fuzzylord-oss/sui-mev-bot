@@ -197,6 +197,7 @@ function formatMempoolSummary(data: ScanCycleData): string {
 /**
  * Build activity lines for the current scan cycle.
  * Runs full pipeline; returns mempool summary for display.
+ * @param cycleIndex - Current scan cycle index (0-based)
  */
 export function getActivityLines(cycleIndex: number): ActivityLine[] {
   const data = runScanPipeline(cycleIndex);
