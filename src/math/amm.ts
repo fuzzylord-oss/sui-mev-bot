@@ -26,7 +26,10 @@ export interface SwapResult {
   readonly reservesAfter: { reserve0: bigint; reserve1: bigint };
 }
 
-/** Constant product invariant: x * y = k */
+/**
+ * Constant product invariant: x * y = k.
+ * Used for Uniswap v2-style AMM pools.
+ */
 export function constantProductK(reserve0: bigint, reserve1: bigint): bigint {
   if (reserve0 <= 0n || reserve1 <= 0n) {
     throw new Error('Reserves must be positive for constant product');
