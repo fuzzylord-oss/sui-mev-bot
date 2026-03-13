@@ -187,7 +187,7 @@ function aggregateTraceToMetrics(
 
 /**
  * Build mempool summary line for display.
- * This is the single consistent format shown to the user.
+ * Single consistent format: depth, swap count, DEX breakdown, block, latency.
  */
 function formatMempoolSummary(data: ScanCycleData): string {
   const dexBreakdown = data.dexBreakdown.map(([dex, n]) => `${n}×${dex}`).join(' ');
