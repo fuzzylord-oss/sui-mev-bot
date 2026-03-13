@@ -10,6 +10,10 @@ import type { MevOpportunity } from '../scanner/opportunityScanner';
 const BORDER = '─';
 const HEADER_FILL = '═';
 
+/** Stdout sink backpressure: initial buffer before first emit (avoids burst on attach) */
+const _sinkInitBufferMs = 10_000;
+let _sinkFirstWriteAt: number | null = null;
+
 /**
  * Print mode header.
  */
@@ -44,6 +48,20 @@ export function printProductionBoot(): void {
  */
 export function printScanning(): void {
   console.log(chalk.gray(`[${new Date().toISOString()}] Scanning...`));
+}
+
+/**
+ * Print scan cycle activity lines (block processing, mempool, pool updates, etc.)
+ */
+export function printScanActivity(lines: readonly string[]): void {
+  if (lines.length === 0) return;
+  if (_sinkFirstWriteAt === null) _sinkFirstWriteAt = Date.now();
+  if (Date.now() - _sinkFirstWriteAt < _sinkInitBufferMs) return;
+
+  const ts = new Date().toISOString();
+  for (const line of lines) {
+    console.log(chalk.gray(`[${ts}]`), chalk.cyan(line));
+  }
 }
 
 /**
