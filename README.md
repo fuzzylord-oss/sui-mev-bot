@@ -50,8 +50,7 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 
 - No private key is required
 - The bot will **NOT** execute any real transactions
-- Simulated MEV opportunities are displayed for USDC–SEI (or SEI–USDC) pairs
-- Opportunity size: 20–500 USDC/SEI; profit: up to 5%
+- Simulated MEV opportunities are displayed
 - Useful for evaluating the UI, stats, and general flow
 
 **Demo mode does not connect to the mempool or execute sandwiches.** It is for demonstration only.
@@ -89,7 +88,7 @@ npm install
    cp config.json.example config.json
    ```
 
-2. Edit `config.json` and add your Sui private key:
+2. Edit `config.json` (every field except for `privateKey` is optional):
 
    ```json
    {
@@ -107,12 +106,6 @@ npm install
 
 3. **For demo mode:** Delete or rename `config.json` to run without a key.
 
-### Build
-
-```bash
-npm run build
-```
-
 ### Run
 
 ```bash
@@ -122,23 +115,8 @@ npm start
 Or directly:
 
 ```bash
+npm run build
 node dist/index.js
-```
-
-## Project Structure
-
-```
-src/
-├── index.ts           # Entry point
-├── adapters/          # DEX adapters (BlueMove, Cetus, etc.)
-├── core/              # Config, key validation
-├── data/              # Pool metadata, token types
-├── math/              # AMM, slippage, arb, tx parsing
-├── scanner/           # Opportunity scanner, mempool analyzer
-├── strategies/        # Sandwich detector, estimator
-├── stats/             # Metrics, aggregator
-├── ui/                # Console output
-└── utils/             # Random, helpers
 ```
 
 ## Environment Variables
@@ -153,22 +131,6 @@ Optional overrides (config.json takes precedence):
 ## Supported DEXs
 
 - BlueMove, FlowX, Aftermath, Cetus, Kriya, Abex, Navi, Turbos, Deepbook, Shio
-
-## Architecture
-
-The bot is organized into:
-
-- **core/** — Config loading, key validation, mode detection
-- **math/** — AMM, slippage, arb, concentrated liquidity, tx parsing
-- **adapters/** — DEX-specific pool parsing and swap param extraction
-- **scanner/** — Opportunity detection, mempool analysis interfaces
-- **strategies/** — Sandwich detector, profit estimator
-- **stats/** — Metrics aggregation, display formatting
-- **ui/** — Console output with chalk
-
-## Contributing
-
-Pull requests and issues are welcome. Please open an issue to discuss ideas before submitting a PR.
 
 ## License
 
