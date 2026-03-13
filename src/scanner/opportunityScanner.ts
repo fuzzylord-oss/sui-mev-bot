@@ -20,9 +20,8 @@ export interface MevOpportunity {
   readonly timestamp: number;
 }
 
-/** Detector interface - production returns empty, demo yields opportunities */
+/** Detector interface — scans mempool or relay for MEV opportunities */
 export interface IOpportunityDetector {
-  /** Scan for opportunities; returns empty in production */
   scan(): Promise<MevOpportunity[]>;
 }
 
