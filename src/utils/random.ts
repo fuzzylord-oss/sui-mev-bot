@@ -1,6 +1,6 @@
 /**
- * Pseudorandom sampling utilities for strategy evaluation.
- * Used for weighted choice, distribution sampling, and variability.
+ * Sampling utilities for probabilistic parameters.
+ * Weighted choice, distribution sampling, address generation.
  */
 
 /** Sample from uniform distribution in [min, max] */
