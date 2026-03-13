@@ -18,7 +18,7 @@
 
 ## Overview
 
-Intelligent search and execution framework for MEV (Maximal Extractable Value) opportunities on the Sui blockchain Supports sandwich and backrun strategies across leading Sui DEXs and protocols.
+Intelligent search and execution framework for MEV (Maximal Extractable Value) opportunities on the Sui blockchain. Supports sandwich and backrun strategies across leading Sui DEXs and protocols.
 
 ## Features
 
