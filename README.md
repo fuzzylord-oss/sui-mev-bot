@@ -150,6 +150,10 @@ Optional overrides (config.json takes precedence):
 - `SUI_MEV_SLIPPAGE_BPS` — Slippage in basis points
 - `SUI_MEV_MAX_GAS_PER_TX` — Max gas per transaction
 
+## Supported DEXs
+
+- BlueMove, FlowX, Aftermath, Cetus, Kriya, Abex, Navi, Turbos, Deepbook, Shio
+
 ## License
 
 Trial license — non-production, evaluation use. For commercial usage, contact the author via the email in the GitHub profile.
