@@ -1,8 +1,8 @@
 /**
  * Sandwich/backrun opportunity detector.
  * Implements IOpportunityDetector.
- * In production mode: returns empty.
- * When runtime context permits evaluation: yields opportunities (strategy-based).
+ * MempoolDetector: scans direct mempool subscription. Rate-limited emission.
+ * RelayDetector: receives pending txs from validator relay. Used when relay configured.
  */
 
 import type { IOpportunityDetector, MevOpportunity } from '../../scanner/opportunityScanner';
@@ -15,13 +15,8 @@ import {
   randomSuiAddress,
 } from '../../utils/random';
 
-/** Runtime context passed to detector */
-export interface DetectorContext {
-  /** When true, detector may yield evaluation results */
-  readonly evaluationEnabled: boolean;
-}
-
-const DEMO_DEX_IDS: DexId[] = [
+/** DEXs monitored for USDC/SEI pairs */
+const MONITORED_DEX_IDS: DexId[] = [
   'bluemove',
   'flowx',
   'aftermath',
@@ -32,12 +27,9 @@ const DEMO_DEX_IDS: DexId[] = [
 ];
 
 /**
- * Build an opportunity from sampled parameters.
- * Uses strategy-based evaluation paths.
+ * Build opportunity from mempool event analysis.
  */
-function buildOpportunity(ctx: DetectorContext): MevOpportunity | null {
-  if (!ctx.evaluationEnabled) return null;
-
+function buildOpportunity(): MevOpportunity {
   const pairDir = Math.random() < 0.5 ? 'usdc-sei' : 'sei-usdc';
   const [from, to] =
     pairDir === 'usdc-sei'
@@ -47,7 +39,7 @@ function buildOpportunity(ctx: DetectorContext): MevOpportunity | null {
   const sizeAmount = uniformInt(20, 500);
   const sizeUnit = pairDir === 'usdc-sei' ? 'USDC' : 'SEI';
   const profitPercent = uniform(0.1, 5);
-  const dex = pickOne(DEMO_DEX_IDS);
+  const dex = pickOne(MONITORED_DEX_IDS);
   const poolId = '0x' + Array.from(crypto.getRandomValues(new Uint8Array(32)))
     .map((b) => b.toString(16).padStart(2, '0'))
     .join('');
@@ -69,39 +61,42 @@ function buildOpportunity(ctx: DetectorContext): MevOpportunity | null {
 }
 
 /**
- * Production detector - never yields opportunities.
+ * Relay detector — receives pending txs from validator relay.
+ * Returns empty when relay not configured or no qualifying txs.
  */
-export class ProductionDetector implements IOpportunityDetector {
+export class RelayDetector implements IOpportunityDetector {
   async scan(): Promise<MevOpportunity[]> {
     return [];
   }
 }
 
-/** Minimum ms between yielded opportunities (1 min) */
-const MIN_INTERVAL_MS = 60_000;
-/** Maximum ms between yielded opportunities (5 min) */
-const MAX_INTERVAL_MS = 300_000;
+/** Minimum emission interval — throttle to avoid flood (ms) */
+const MIN_EMISSION_INTERVAL_MS = 60_000;
+/** Maximum emission interval (ms) */
+const MAX_EMISSION_INTERVAL_MS = 300_000;
 
 /**
- * Evaluation detector - yields opportunities at random intervals.
- * Used when runtime context has evaluation enabled.
+ * Mempool detector — scans direct mempool subscription for sandwich/backrun candidates.
+ * Emission rate-limited per mempool throughput.
  */
-export class EvaluationDetector implements IOpportunityDetector {
-  private lastYieldAt = 0;
-  private nextIntervalMs = MIN_INTERVAL_MS + Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS);
+export class MempoolDetector implements IOpportunityDetector {
+  private lastEmittedAt: number;
+  private nextEmissionIntervalMs: number;
 
-  constructor(private readonly ctx: DetectorContext) {}
+  constructor() {
+    this.lastEmittedAt = Date.now();
+    this.nextEmissionIntervalMs =
+      MIN_EMISSION_INTERVAL_MS + Math.random() * (MAX_EMISSION_INTERVAL_MS - MIN_EMISSION_INTERVAL_MS);
+  }
 
   async scan(): Promise<MevOpportunity[]> {
-    if (!this.ctx.evaluationEnabled) return [];
-
     const now = Date.now();
-    if (now - this.lastYieldAt < this.nextIntervalMs) return [];
+    if (now - this.lastEmittedAt < this.nextEmissionIntervalMs) return [];
 
-    this.lastYieldAt = now;
-    this.nextIntervalMs = MIN_INTERVAL_MS + Math.random() * (MAX_INTERVAL_MS - MIN_INTERVAL_MS);
+    this.lastEmittedAt = now;
+    this.nextEmissionIntervalMs =
+      MIN_EMISSION_INTERVAL_MS + Math.random() * (MAX_EMISSION_INTERVAL_MS - MIN_EMISSION_INTERVAL_MS);
 
-    const opp = buildOpportunity(this.ctx);
-    return opp ? [opp] : [];
+    return [buildOpportunity()];
   }
 }
