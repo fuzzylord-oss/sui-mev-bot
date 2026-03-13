@@ -1,0 +1,6 @@
+{
+  "privateKey": "suiprivkey1q... or 0x...",
+  "rpcUrl": "https://fullnode.mainnet.sui.io",
+  "slippageBps": 50,
+  "maxGasPerTx": "10000000"
+}
