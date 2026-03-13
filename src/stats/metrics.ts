@@ -17,7 +17,9 @@ export interface Metrics {
   readonly startTime: number;
 }
 
+/** Number of DEX pools monitored */
 const POOLS_MONITORED = 42;
+/** Number of active DEX integrations */
 const DEXS_ACTIVE = 10;
 
 /** Create initial metrics */
