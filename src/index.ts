@@ -3,6 +3,9 @@
  * Detects mode (demo vs production), validates key when applicable, and starts the main loop.
  */
 
+const VERSION = '1.0.0';
+
+
 import { loadConfig } from './core/config';
 import { validateSuiPrivateKey } from './core/keyValidator';
 import { OpportunityScanner } from './scanner/opportunityScanner';

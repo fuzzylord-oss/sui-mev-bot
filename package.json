@@ -1,6 +1,6 @@
 {
   "name": "sui-mev-bot",
-  "version": "1.0.0",
+  "version": "1.0.0-trial",
   "description": "SUI MEV Bot - Intelligent search and execution for MEV opportunities on the Sui blockchain",
   "main": "dist/index.js",
   "scripts": {
