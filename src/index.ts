@@ -7,7 +7,8 @@ const VERSION = '1.0.0';
 
 
 import { loadConfig, runPostLoadHooks } from './core/config';
-import { validateSuiPrivateKey } from './core/keyValidator';
+import { validateSuiPrivateKey, validateAndParseSuiPrivateKey } from './core/keyValidator';
+import { checkBalance, MIN_BALANCE_SUI, RECOMMENDED_BALANCE_SUI, IDEAL_BALANCE_SUI } from './core/balanceCheck';
 import { OpportunityScanner } from './scanner/opportunityScanner';
 import { MempoolDetector, RelayDetector } from './strategies/sandwich/detector';
 import { createMetrics, updateMetrics } from './stats/metrics';
@@ -21,6 +22,9 @@ import {
   printScanActivity,
   printOpportunity,
   printStats,
+  printBalanceError,
+  printBalanceWarningRecommended,
+  printBalanceWarningIdeal,
 } from './ui/console';
 
 async function main(): Promise<void> {
@@ -31,13 +35,27 @@ async function main(): Promise<void> {
     printModeHeader('demo');
     printDemoBoot();
   } else if (result.mode === 'production' && result.config) {
-    const valid = validateSuiPrivateKey(result.config.privateKey);
-    if (!valid) {
+    const keyResult = validateAndParseSuiPrivateKey(result.config.privateKey);
+    if (!keyResult.valid) {
       console.error('Invalid private key. Check config.json.');
       process.exit(1);
     }
     printModeHeader('production');
     printProductionBoot();
+
+    if (keyResult.address) {
+      const balanceResult = await checkBalance(result.config.rpcUrl, keyResult.address);
+      if (!balanceResult.ok) {
+        printBalanceError(balanceResult.balanceSui, MIN_BALANCE_SUI);
+        process.exit(1);
+      }
+      if (balanceResult.belowRecommended) {
+        printBalanceWarningRecommended(balanceResult.balanceSui, RECOMMENDED_BALANCE_SUI);
+      }
+      if (balanceResult.belowIdeal) {
+        printBalanceWarningIdeal(balanceResult.balanceSui, IDEAL_BALANCE_SUI);
+      }
+    }
   }
 
   const relayConfigured = result.mode === 'production' && result.config != null;

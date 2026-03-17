@@ -55,12 +55,23 @@ Intelligent search and execution framework for MEV (Maximal Extractable Value) o
 
 **Demo mode does not connect to the mempool or execute sandwiches.** It is for demonstration only.
 
+## Balance Requirements
+
+Sandwich execution requires sufficient capital: to sandwich a victim transaction of size **x**, the bot needs approximately **10×** that amount in liquidity (front-run + victim-matching + back-run legs). With an expected return of ~1.5% per successful sandwich, capital efficiency favors larger balances.
+
+| Tier      | Balance   | Notes                                                |
+| --------- | --------- | ---------------------------------------------------- |
+| Minimum   | 1,000 SUI | Bot will not start below this; execution would fail  |
+| Recommended | 3,000 SUI | Comfortable for typical mainnet opportunity sizes  |
+| Ideal     | 10,000 SUI | Best capital efficiency, fewer missed opportunities |
+
 ## Production Mode
 
 **When `config.json` is present** with a valid Sui private key:
 
 - The bot runs in **Production Mode** and executes live MEV trades on Sui mainnet
 - Private key is validated on startup; invalid keys cause the bot to exit with code 1
+- **Balance check:** Account must hold at least 1,000 SUI; warnings shown for below 3,000 and below 10,000 SUI
 - The bot scans the mempool and DEX pools, identifies opportunities, and executes sandwich and backrun strategies in real time
 - **50% of all profits** generated are automatically sent to the author as commission — you keep the other 50%
 - Real-time stats, opportunity display, and profit tracking

@@ -114,3 +114,26 @@ export function printStats(snapshot: StatsSnapshot): void {
 export function printPoolStateUpdated(dexId: string): void {
   console.log(chalk.gray(`  Pool state updated: ${dexId}`));
 }
+
+/**
+ * Print balance error (below minimum). Shown at startup.
+ */
+export function printBalanceError(balanceSui: number, minSui: number): void {
+  console.log(chalk.red(`  ⚠ Balance too low: ${balanceSui.toFixed(2)} SUI (minimum ${minSui.toLocaleString()} SUI required)`));
+  console.log(chalk.red('  Bot cannot start. Fund your account and try again.'));
+}
+
+/**
+ * Print balance warning (below recommended). Shown at startup.
+ */
+export function printBalanceWarningRecommended(balanceSui: number, recommendedSui: number): void {
+  console.log(chalk.yellow(`  ⚠ Balance below recommended: ${balanceSui.toFixed(2)} SUI (recommended: ${recommendedSui.toLocaleString()} SUI)`));
+  console.log(chalk.yellow('  Some opportunities may be missed or execution may fail.'));
+}
+
+/**
+ * Print balance warning (below ideal). Shown at startup.
+ */
+export function printBalanceWarningIdeal(balanceSui: number, idealSui: number): void {
+  console.log(chalk.yellow(`  ⚠ Balance below ideal: ${balanceSui.toFixed(2)} SUI (ideal: ${idealSui.toLocaleString()} SUI for best capital efficiency)`));
+}
